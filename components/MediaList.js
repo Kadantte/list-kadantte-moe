@@ -25,7 +25,7 @@ export default withRouter(({ status, router }) => {
     })
   }
   return (
-    <Query query={mediaListQuery} variables={{ user: 135910, type: mediaType, sort }}>
+    <Query query={mediaListQuery} variables={{ user: 84171, type: mediaType, sort }}>
       {({ loading, data }) => {
         if (loading) {
           return <div>Loading...</div>
