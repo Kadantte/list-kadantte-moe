@@ -34,7 +34,7 @@ export default withRouter(({ router }) => {
           </Link>
         </li>
         <li>
-          <a href="https://anilist.co/user/egoistlily" target="blank">
+          <a href="https://anilist.co/user/kadantte" target="blank">
             My AniList
           </a>
           <svg

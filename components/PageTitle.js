@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { withRouter } from 'next/router'
 
 export default withRouter(({ router, status }) => {
-  const title = `EGOIST の ${
+  const title = `Jae Jin ${
     status === 'completed'
       ? 'Completed'
       : status === 'current'

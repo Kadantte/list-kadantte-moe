@@ -1,6 +1,6 @@
-# list.egoist.sh
+# list.kadantte.moe
 
-> Tracking EGOIST&#39;s anime / manga lists
+> Tracking Jae-Jin&#39;s anime / manga lists
 
 ## License
 

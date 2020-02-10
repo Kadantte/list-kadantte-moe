@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "alias": ["list.egoist.sh"],
+  "alias": ["list.kadantte.moe"],
   "builds": [
     {
       "src": "next.config.js",
