@@ -39,7 +39,6 @@ class MyApp extends App {
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
           />
         </Head>
-        <GitHub />
         <ApolloProvider client={apolloClient}>
           <Component {...pageProps} />
         </ApolloProvider>
