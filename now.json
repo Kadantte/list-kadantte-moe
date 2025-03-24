@@ -6,10 +6,5 @@
       "src": "next.config.js",
       "use": "@now/next"
     }
-  ],
-  "build": {
-    "env": {
-      "NODE_ENV": "production"
-    }
-  }
+  ]
 }
