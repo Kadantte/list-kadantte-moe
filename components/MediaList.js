@@ -6,32 +6,28 @@ import { getList } from '../lib/utils'
 
 export default withRouter(({ status, router }) => {
   const mediaType = (router.query.type || 'anime').toUpperCase()
-  const sort = status === 'completed' ? ['SCORE_DESC', 'UPDATED_TIME_DESC'] : ['UPDATED_TIME_DESC']
+  const sort =
+    status === 'completed' ? ['SCORE_DESC', 'UPDATED_TIME_DESC'] : ['UPDATED_TIME_DESC']
+
   const scoreFilter = items => {
     const { rating } = router.query
     return items.filter(item => {
       if (status === 'completed') {
-        if (rating === 'perfect') {
-          return item.score && item.score >= 9.5
-        }
-        if (rating === 'great') {
-          return item.score && item.score >= 8.5 && item.score < 9.5
-        }
-        if (rating === 'good') {
-          return item.score && item.score >= 7.5 && item.score < 8.5
-        }
+        if (rating === 'perfect') return item.score && item.score >= 9.5
+        if (rating === 'great') return item.score && item.score >= 8.5 && item.score < 9.5
+        if (rating === 'good') return item.score && item.score >= 7.5 && item.score < 8.5
       }
       return true
     })
   }
+
   return (
     <Query query={mediaListQuery} variables={{ user: 84171, type: mediaType, sort }}>
       {({ loading, data }) => {
-        if (loading) {
-          return <div>Loading...</div>
-        }
+        if (loading) return <div>Loading...</div>
+
         const list = getList(
-          data.MediaListCollection.lists,
+          data?.MediaListCollection?.lists,
           status === 'completed'
             ? 'Completed'
             : status === 'current'
@@ -40,35 +36,41 @@ export default withRouter(({ status, router }) => {
               : 'Watching'
             : 'Planning'
         )
-        const items = scoreFilter(list.entries)
+
+        // ❌ Old version that crashes if `list` is undefined
+        // const items = scoreFilter(list.entries)
+
+        // ✅ Safe version using optional chaining and fallback
+        const items = scoreFilter(list?.entries || [])
+
         if (items.length === 0) {
           return (
             <div className="empty-list">
               No Result
               <style jsx>{`
-              .empty-list {
-                padding: 50px 30px;
-                text-align: center;
-                border: 1px solid #e2e2e2;
-                color: #666;
-                border-radius: 4px;
-                font-size: 2rem;
-              }
+                .empty-list {
+                  padding: 50px 30px;
+                  text-align: center;
+                  border: 1px solid #e2e2e2;
+                  color: #666;
+                  border-radius: 4px;
+                  font-size: 2rem;
+                }
               `}</style>
             </div>
           )
         }
+
         return (
           <div className="media-list">
             {items.map(entry => {
-              const useVolumes =
-                entry.progressVolumes && entry.progressVolumes > 0
-              const useChapters =
-                mediaType === 'MANGA' && entry.progress && entry.progress > 0
+              const useVolumes = entry.progressVolumes && entry.progressVolumes > 0
+              const useChapters = mediaType === 'MANGA' && entry.progress && entry.progress > 0
               const total =
                 (useVolumes && entry.media.volumes) ||
                 entry.media.chapters ||
                 entry.media.episodes
+
               return (
                 <a
                   href={entry.media.siteUrl}
@@ -86,9 +88,9 @@ export default withRouter(({ status, router }) => {
                   <div className="media-content">
                     <div className="media-title">
                       {entry.media.title.english || entry.media.title.romaji}
-                      {!/^tv/i.test(entry.media.format) && <span className="media-format">
-                        {entry.media.format}
-                      </span>}
+                      {!/^tv/i.test(entry.media.format) && (
+                        <span className="media-format">{entry.media.format}</span>
+                      )}
                     </div>
                     <div className="media-meta">
                       {status === 'completed' && entry.score ? (
@@ -110,8 +112,7 @@ export default withRouter(({ status, router }) => {
                         <span className="media-date">
                           Next Episode in{' '}
                           {humanizeDuration(
-                            entry.media.nextAiringEpisode.timeUntilAiring *
-                              1000,
+                            entry.media.nextAiringEpisode.timeUntilAiring * 1000,
                             { largest: 1 }
                           )}
                         </span>
