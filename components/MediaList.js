@@ -26,8 +26,12 @@ export default withRouter(({ status, router }) => {
       {({ loading, data }) => {
         if (loading) return <div>Loading...</div>
 
+        // ❌ Old code (causes crash if data or list is undefined)
+        // const list = getList(data?.MediaListCollection?.lists, ...)
+
+        // ✅ Legacy-safe version (no optional chaining)
         const list = getList(
-          data?.MediaListCollection?.lists,
+          data && data.MediaListCollection && data.MediaListCollection.lists,
           status === 'completed'
             ? 'Completed'
             : status === 'current'
@@ -37,11 +41,11 @@ export default withRouter(({ status, router }) => {
             : 'Planning'
         )
 
-        // ❌ Old version that crashes if `list` is undefined
+        // ❌ Crashes if list is undefined
         // const items = scoreFilter(list.entries)
 
-        // ✅ Safe version using optional chaining and fallback
-        const items = scoreFilter(list?.entries || [])
+        // ✅ Legacy-safe fallback for empty/missing list
+        const items = scoreFilter((list && list.entries) || [])
 
         if (items.length === 0) {
           return (
