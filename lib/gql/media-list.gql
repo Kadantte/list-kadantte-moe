@@ -1,61 +1,9 @@
-# ORIGINAL (⚠️ causes Vercel FUNCTION_RESPONSE_PAYLOAD_TOO_LARGE)
-# query getMediaList ($user: Int, $type: MediaType, $sort: [MediaListSort]) {
-#   MediaListCollection(
-#     userId: $user,
-#     type: $type,
-#     status_in: [CURRENT, PLANNING, COMPLETED],
-#     perChunk: 500,
-#     sort: $sort
-#   ) {
-#     lists {
-#       name
-#       entries {
-#         score
-#         progress
-#         progressVolumes
-#         media {
-#           id
-#           format
-#           nextAiringEpisode {
-#             timeUntilAiring
-#           }
-#           episodes
-#           chapters
-#           volumes
-#           siteUrl
-#           description
-#           coverImage {
-#             large
-#             color
-#           }
-#           title {
-#             english
-#             romaji
-#             native
-#           }
-#           startDate {
-#             year
-#             month
-#             day
-#           }
-#         }
-#       }
-#     }
-#   }
-# }
-
-# ✅ OPTIMIZED VERSION (multiple statuses but safe payload size)
-query getMediaList(
-  $user: Int,
-  $type: MediaType,
-  $sort: [MediaListSort],
-  $perChunk: Int = 50
-) {
+query getMediaList($user: Int, $type: MediaType, $sort: [MediaListSort]) {
   MediaListCollection(
     userId: $user,
     type: $type,
     status_in: [CURRENT, PLANNING, COMPLETED],
-    perChunk: $perChunk,
+    perChunk: 100,
     sort: $sort
   ) {
     lists {
@@ -63,19 +11,31 @@ query getMediaList(
       entries {
         score
         progress
+        progressVolumes
         media {
           id
-          siteUrl
           format
-          title {
-            romaji
-            english
-          }
-          coverImage {
-            large
-          }
           nextAiringEpisode {
             timeUntilAiring
+          }
+          episodes
+          chapters
+          volumes
+          siteUrl
+          description
+          coverImage {
+            large
+            color
+          }
+          title {
+            english
+            romaji
+            native
+          }
+          startDate {
+            year
+            month
+            day
           }
         }
       }
